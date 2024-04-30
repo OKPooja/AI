@@ -1,13 +1,12 @@
 from queue import PriorityQueue
 
-def gbfs(graph, curr_node, goal_node, visited, open_list, closed_list, path, cost):
+def gbfs(graph, curr_node, goal_node, visited, open_list, closed_list, path, heuristic):
     visited.add(curr_node)
     q = PriorityQueue()
-    q.put((0, curr_node))
+    q.put((heuristic[curr_node], curr_node))
     open_list.append(curr_node)
     iteration = 0
     while not q.empty():
-
         print(f"Iteration {iteration}:")
         print("Open list:", open_list)
         print("Closed list:", closed_list)
@@ -21,7 +20,7 @@ def gbfs(graph, curr_node, goal_node, visited, open_list, closed_list, path, cos
             break
         for node in graph[top]:
             if node not in visited:
-                c = cost[(top, node)]
+                c = heuristic[node]
                 q.put((c, node))
                 visited.add(node)
                 open_list.append(node)
@@ -40,12 +39,13 @@ if __name__ == "__main__":
         7: [2],
         9: [4],
     }
-    cost = {
-        (1, 2): 4,
-        (1, 4): 1,
-        (2, 6): 2,
-        (2, 7): 1,
-        (4, 9): 2,
+    heuristic = {
+        1: 4,
+        2: 1,
+        4: 6,
+        6: 3,
+        7: 9,
+        9: 2
     }
     start_node = 1
     goal_node = 7
@@ -54,5 +54,5 @@ if __name__ == "__main__":
     closed_list = []
     path = []
     iteration = 1
-    gbfs(graph, start_node, goal_node, visited, open_list, closed_list, path, cost)
+    gbfs(graph, start_node, goal_node, visited, open_list, closed_list, path, heuristic)
     print(' -> '.join(map(str,path)))
